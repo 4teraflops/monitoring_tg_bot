@@ -49,8 +49,6 @@ async def news_poster(call: CallbackQuery, state: FSMContext):
         # В анализ
         insert_in_analysis_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
                                  call.from_user.username, call.data.split(':')[1])
-        await state.get_state()
-        await NewsPoster.Choise_command.set()
 
     elif button_callback == 'all':
         text = 'Фиксируем технические трудности в проведении онлайн-платежей.\nМогут быть двойные списания (при создании платежей с заморозкой), задержки в проведении онлайн-платежей, либо отказы при попытке создать платеж.\nНе проведенные платежи складываются в очередь, мы уже работаем над устранением причин и последствий.\nО восстановлении сообщим дополнительно.'
@@ -60,8 +58,6 @@ async def news_poster(call: CallbackQuery, state: FSMContext):
         # В анализ
         insert_in_analysis_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
                                  call.from_user.username, call.data.split(':')[1])
-        await state.get_state()
-        await NewsPoster.Choise_command.set()
 
     elif button_callback == 'fixed':
         text = 'Вернулись в штатный режим работы.'
@@ -72,6 +68,4 @@ async def news_poster(call: CallbackQuery, state: FSMContext):
         # В анализ
         insert_in_analysis_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
                                  call.from_user.username, call.data.split(':')[1])
-        await state.get_state()
-        await NewsPoster.Choise_command.set()
 
