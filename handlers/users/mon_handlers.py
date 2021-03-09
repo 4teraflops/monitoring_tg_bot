@@ -17,8 +17,7 @@ logger.add(f'src/log/{__name__}.log', format='{time} {level} {message}', level='
 @dp.callback_query_handler(menu_callbacks.filter(click1='postmon'), state=Start.Start_menu)  # Ловим State и callback
 async def postmon_menu(call: CallbackQuery, state: FSMContext):
     await state.get_state()
-    # Укажем cache_time, чтобы бот не получал какое-то время апдейты, тогда нижний код не будет выполняться.
-    await call.answer(cache_time=60)
+
     # Отобразим что у нас лежит в callback_data
     # logger.info(f'callback_data_type={call.data.split(":")[1]}')  # Задаю разделитель ":" и вывел второй элемент массива
 
@@ -56,8 +55,8 @@ async def acqpc_mon_menu(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(state=Pu.Tools)
 async def pu_tools(call: CallbackQuery, state: FSMContext):
-    await state.get_state()
     button_callback = call.data.split(":")[1]
+    await state.get_state()
 
     if button_callback == 'Back':
         text = 'Привет! Выбирай кнопку'
@@ -98,6 +97,7 @@ async def pu_tools(call: CallbackQuery, state: FSMContext):
         # Меняем клавиатуру в сообщении
         await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id,
                                             reply_markup=manage_pu_menu)
+        await state.get_state()
         await Pu.Manage.set()
         # В анализ
         insert_in_analysis_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
@@ -106,8 +106,8 @@ async def pu_tools(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(state=ACQPC.Tools)
 async def acqpc_tools(call: CallbackQuery, state: FSMContext):
-    await state.get_state()
     button_callback = call.data.split(":")[1]
+    await state.get_state()
 
     if button_callback == 'Back':
         text = 'Привет! Выбирай кнопку'
@@ -145,6 +145,7 @@ async def acqpc_tools(call: CallbackQuery, state: FSMContext):
         await bot.edit_message_text(chat_id=call.from_user.id, message_id=call.message.message_id, text=text)
         await bot.edit_message_reply_markup(chat_id=call.from_user.id, message_id=call.message.message_id,
                                             reply_markup=manage_acqpc_menu)
+        await state.get_state()
         await ACQPC.Manage.set()
         # В анализ
         insert_in_analysis_table(call.from_user.id, call.from_user.first_name, call.from_user.last_name,
