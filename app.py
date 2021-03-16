@@ -20,7 +20,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print('Вы завершили работу программы collector')
         logger.info('Program has been stop manually')
-#    except Exception as e:
-#        t_alarmtext = f'monitoring_tg_bot (app.py): {str(e)}'
-#        do_alarm(t_alarmtext)
-#        logger.error(f'Other except error Exception', exc_info=True)
+    except Exception as e:
+        t_alarmtext = f'monitoring_tg_bot (app.py): {str(e)}'
+        do_alarm(t_alarmtext)
+        logger.error(f'Other except error Exception', exc_info=True)
