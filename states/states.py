@@ -3,15 +3,20 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 
 class Start(StatesGroup):
     Auth = State()
+    Phone = State()
     Start_menu = State()
 
 
-class Pu(Start):
+class Mons(Start):
+    Mons_menu = State()
+
+
+class ACQPC(Mons):
     Tools = State()
     Manage = State()
 
 
-class ACQPC(Start):
+class Postmon(Mons):
     Tools = State()
     Manage = State()
 
@@ -21,4 +26,4 @@ class NewsPoster(Start):
 
 
 class DemoChecker(Start):
-    Start = State()
+    Methods = State()

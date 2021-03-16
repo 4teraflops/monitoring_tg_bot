@@ -56,7 +56,7 @@ def create_anonimus_pay():
     }
     r = s.post(url, data=json.dumps(payload), headers=headers)
     request = r.json()
-    #logger.info(f'request: {request}')
+    logger.info(f'request: {request}')
     try:
         regPayNum = request['regPayNum']
         user['regPayNum'] = regPayNum
@@ -96,7 +96,8 @@ def check_pay_status():
         elif payment_state == 'created':
             #logger.info(f'retry: {user["fiscal_retry"]}')
             if user['fiscal_retry'] <= 3:
-                output.append(f' Warn: Payment state: {payment_state}. Retry...\n')
+                output.append(f'Warn: Payment state: {payment_state}. Retry...\n')
+                #logger.info(f'Warn: Payment state: {payment_state}. Retry...\n')
                 time.sleep(5)
                 user['fiscal_retry'] += 1
                 check_pay_status()

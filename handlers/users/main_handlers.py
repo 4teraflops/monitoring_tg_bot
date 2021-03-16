@@ -2,7 +2,7 @@ from config import access_list
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton, ContentTypes
-from keyboards.inline.choice_buttons import start_menu
+from keyboards.inline.keyboards import start_menu
 from loader import dp
 from states.states import Start
 from src.analyzer import insert_in_analysis_table
@@ -45,7 +45,8 @@ async def lost_state(call: CallbackQuery, state: FSMContext):
 async def auth(message: Message, state: FSMContext):
     await state.get_state()
     user_phone = message.contact.phone_number
-    #logger.info(f'user_phone:{user_phone}')
+    await state.update_data(Phone=user_phone)  # Запомним телефон клиента
+    logger.info(f'user_phone:{user_phone}')
     if user_phone in access_list:
         text = 'Привет! Выбирай кнопку'
         await message.answer(text=text, reply_markup=start_menu)

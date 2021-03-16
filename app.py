@@ -10,6 +10,7 @@ async def on_shutdown(dp):
     await dp.storage.close()
     await dp.storage.wait_closed()
 
+
 if __name__ == '__main__':
     from aiogram import executor
     from handlers import dp
@@ -20,6 +21,6 @@ if __name__ == '__main__':
         print('Вы завершили работу программы collector')
         logger.info('Program has been stop manually')
 #    except Exception as e:
-#        t_alarmtext = f'tg_mon_bot (app.py): {str(e)}'
+#        t_alarmtext = f'monitoring_tg_bot (app.py): {str(e)}'
 #        do_alarm(t_alarmtext)
 #        logger.error(f'Other except error Exception', exc_info=True)

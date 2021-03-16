@@ -2,7 +2,7 @@ from config import news_channel_id
 from aiogram.dispatcher import FSMContext
 from aiogram.types import Message, CallbackQuery
 from keyboards.inline.callback_datas import menu_callbacks
-from keyboards.inline.choice_buttons import poster_menu, start_menu
+from keyboards.inline.keyboards import poster_menu, start_menu
 from loader import dp, bot
 from states.states import Start, NewsPoster
 from src.analyzer import insert_in_analysis_table
@@ -11,7 +11,7 @@ from loguru import logger
 logger.add(f'src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
-@dp.callback_query_handler(menu_callbacks.filter(click1='newsposter'), state=Start.Start_menu)  # Ловим State и callback
+@dp.callback_query_handler(menu_callbacks.filter(click1='news_poster'), state=Start.Start_menu)  # Ловим State и callback
 async def news_poster_menu(call: CallbackQuery, state: FSMContext):
     await state.get_state()
     text = 'С чем проблемы?'
