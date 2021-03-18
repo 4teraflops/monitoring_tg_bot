@@ -9,15 +9,13 @@ import random
 from datetime import datetime
 from loguru import logger
 
-logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.add(f'extentions/demo_checker/src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
 s = requests.Session()
-sert_path = 'extentions/demo_checker/src/cert.pem'
-key_path = 'extentions/demo_checker/src/dec.key'
 # Приватный ключ через тектсовик я вытащил из серта pem, затем командой
 # "openssl rsa -in my.key_encrypted -out my.key_decrypted" (со вводом пароля) расшифровал закрытый ключ
-s.cert = (sert_path, key_path)
+s.cert = (config.sert_path, config.key_path)
 user = {}  # Для записи локальных переменных в глобальную
 json_headers = {'Content-Type': 'application/json'}
 output = []
@@ -25,7 +23,6 @@ output = []
 
 @logger.catch()
 def user_registration():
-    #print('Check method /user/registration...', end='')
     output.append('\nCheck rekurrent payment methods:\n\n')
     output.append('/user/registration...')
     url = config.user_registration_rek_url

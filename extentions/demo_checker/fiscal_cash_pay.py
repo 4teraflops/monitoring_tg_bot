@@ -7,14 +7,12 @@ import os
 import time
 from loguru import logger
 
-logger.add(f'src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.add(f'extentions/demo_checker/src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 s = requests.Session()
-sert_path = 'extentions/demo_checker/src/cert.pem'
-key_path = 'extentions/demo_checker/src/dec.key'
 # Приватный ключ через тектсовик вытащил из серта pem, затем командой
 # "openssl rsa -in my.key_encrypted -out my.key_decrypted" (со вводом пароля) расшифровал закрытый ключ
-s.cert = (sert_path, key_path)
+s.cert = (config.sert_path, config.key_path)
 user = {'fiscal_retry': 0}
 output = []
 

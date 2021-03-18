@@ -6,7 +6,7 @@ from src.manager import do_alarm
 from loguru import logger
 from . anonimus_pay import HTTPError
 
-logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
+logger.add(f'extentions/demo_checker/src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
 def autotest_anonimus_pay():
