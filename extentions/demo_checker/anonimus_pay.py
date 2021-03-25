@@ -2,7 +2,7 @@ import requests
 from requests.exceptions import HTTPError
 from requests.auth import HTTPBasicAuth
 import json
-from src import config
+from .src import config
 import time
 import random
 from loguru import logger
