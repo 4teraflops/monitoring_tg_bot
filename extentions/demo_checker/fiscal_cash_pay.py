@@ -42,7 +42,7 @@ def create_anonimus_pay():
     }
     r = s.post(url, data=json.dumps(payload), headers=headers, auth=auth)
     response = r.json()
-    logger.info(f'response: {response}')
+    #logger.info(f'response: {response}')
     # Сначала зачистим переменную с кол-вом попыток выгрузки фискального чека.
     # Подход костыльный, его надо поправить.
     user['fiscal_retry'] = 0
@@ -70,12 +70,12 @@ def check_pay_status():
         }
         r = s.post(url, data=json.dumps(payload), headers=headers, auth=auth)
         response = r.json()
-        logger.info(f'response: {response}')
+        #logger.info(f'response: {response}')
         payment_state = response['state']
         if payment_state == 'payed':
             output.append('OK\n')
         elif payment_state == 'created':
-            logger.info(f'retry: {user["fiscal_retry"]}')
+            #logger.info(f'retry: {user["fiscal_retry"]}')
             if user['fiscal_retry'] <= 3:
                 output.append(f' Warn: Payment state: {payment_state}. Retry...\n')
                 time.sleep(5)
@@ -104,7 +104,7 @@ def get_fiscal_check():
         output.append('/receipt-fiscal...')
         r = s.post(url, data=json.dumps(payload), headers=headers, auth=auth)
         response = r.json()
-        logger.info(f'response: {response}')
+        #logger.info(f'response: {response}')
         fiscal_url = response['fiscalUrl']
         if fiscal_url:
             output.append('OK\n')

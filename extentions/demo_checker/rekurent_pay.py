@@ -147,7 +147,7 @@ def do_payment():
     }
     r = s.post(url, data=json.dumps(payload), headers=json_headers, auth=auth)
     response = r.json()
-    logger.info(f'response: {response}')
+    #logger.info(f'response: {response}')
     regPayNum = response['regPayNum']
     user['regPayNum'] = regPayNum  # Записал в глобальную переменную
     if regPayNum:
@@ -170,7 +170,7 @@ def confirm_pay():
     }
     r = s.post(url, data=json.dumps(payload), headers=json_headers, auth=auth)
     response = r.json()
-    logger.info(f'response: {response}')
+    #logger.info(f'response: {response}')
     try:
         result = response['resultState']
         if result == 'success':
@@ -196,7 +196,7 @@ def get_pay_state():
     }
     r = s.post(url, data=json.dumps(payload), headers=json_headers, auth=auth)
     response = r.json()
-    logger.info(f'response: {response}')
+    #logger.info(f'response: {response}')
     try:
         payment_state = response['state']
         if payment_state:
@@ -228,7 +228,7 @@ def refund_payment():
     }
     r = s.post(url, data=json.dumps(payload), headers=json_headers, auth=auth)
     response = r.json()
-    logger.info(f'response: {response}')
+    #logger.info(f'response: {response}')
     try:
         result = response['resultState']
         if result == 'success':
@@ -254,7 +254,7 @@ def card_deactivation():
     }
     r = s.post(url, data=json.dumps(payload), headers=json_headers, auth=auth)
     response = r.json()
-    logger.info(f'response: {response}')
+    #logger.info(f'response: {response}')
     result = response['resultState']
     if result == 'success':
         output.append('OK\n')

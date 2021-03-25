@@ -2,7 +2,7 @@ import requests
 from requests.exceptions import HTTPError
 from requests.auth import HTTPBasicAuth
 import json
-from .src import config
+from src import config
 import time
 import random
 from loguru import logger
@@ -121,3 +121,9 @@ def check_pay_status():
         check_pay_status()
     else:
         output.append(f'Something wrong! payment state: {payment_state}\n')
+
+
+if __name__ == '__main__':
+    create_anonimus_pay()
+    payment_created_pay()
+    check_pay_status()
