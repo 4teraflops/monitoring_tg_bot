@@ -1,23 +1,18 @@
 import requests
 from requests.exceptions import HTTPError
+from requests.auth import HTTPBasicAuth
 import json
 from .src import config
 import time
-import hashlib
 import random
-from extentions.demo_checker import demo_checker
 from loguru import logger
 
-logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
-
-
+logger.add(f'extentions/demo_checker/src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 s = requests.Session()
-sert_path = 'extentions/demo_checker/src/cert.pem'
-key_path = 'extentions/demo_checker/src/dec.key'
 # Приватный ключ через тектсовик я вытащил из серта pem, затем командой
 # "openssl rsa -in my.key_encrypted -out my.key_decrypted" (со вводом пароля) расшифровал закрытый ключ
-s.cert = (sert_path, key_path)
-
+# s.cert = (config.sert_path, config.key_path)
+auth = HTTPBasicAuth(config.shopToken, config.sec_key)
 user = {}  # Для записи локальных переменных в глобальную
 output = []
 
@@ -29,7 +24,6 @@ def create_anonimus_pay():
     output.append('/do/payment/anonymous...')
     url = config.anonimus_pay_url
     payload = {
-        "sign": "16088965AB36DAA41E401BD948E13BBC",
         "serviceCode": f"{config.service_code}",
         "amount": "2500",
         "comission": "0",
@@ -38,21 +32,19 @@ def create_anonimus_pay():
                 "name": "ПОЗЫВНОЙ",
                 "value": f"{random.randint(10, 20)}"
             }
-        ],
-        "shopToken": "1a4c0d33-010c-4365-9c65-4c7f9bb415d5"
+        ]
     }
     # Рассчет подписи
-    sign_str = payload['serviceCode'] + '&' + payload['amount'] + '&' + payload['comission'] + '&' + payload['properties'][0]['name'] + '&' + payload['properties'][0]['value'] + '&' + payload['shopToken'] + '&' + config.sec_key
-    pre_sign = (hashlib.md5(f"{sign_str}".encode('utf-8')).hexdigest()).upper()
-    sign = (hashlib.md5(f"{pre_sign}".encode('utf-8')).hexdigest()).upper()
-    payload['sign'] = sign
+    #sign_str = payload['serviceCode'] + '&' + payload['amount'] + '&' + payload['comission'] + '&' + payload['properties'][0]['name'] + '&' + payload['properties'][0]['value'] + '&' + payload['shopToken'] + '&' + config.sec_key
+    #pre_sign = (hashlib.md5(f"{sign_str}".encode('utf-8')).hexdigest()).upper()
+    #sign = (hashlib.md5(f"{pre_sign}".encode('utf-8')).hexdigest()).upper()
+    #payload['sign'] = sign
     headers = {
         'Content-Type': 'application/json',
         "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0",
     }
-    r = s.post(url, data=json.dumps(payload), headers=headers)
-    #logger.info(f'r.text: {r.text}')
-
+    r = s.post(url, data=json.dumps(payload), headers=headers, auth=auth)
+    #logger.info(f'responce: {r.text}')
     if r.status_code == 200:
         request = r.json()
     else:
@@ -61,8 +53,6 @@ def create_anonimus_pay():
         raise HTTPError
 
     try:
-        user['sign'] = request['sign']
-        user['shopToken'] = request['shopToken']
         user['regPayNum'] = request['regPayNum']
         user['payUrl'] = request['payUrl']
         user['methodType'] = request['methodType']
@@ -70,12 +60,9 @@ def create_anonimus_pay():
         #print(f'Something wrong! Key Error. Url: {url}, request: {request}')
         output.append(f'Something wrong! Except Key Error. Url: {url}, request: {request}\n')
 
-    #print(f'sign: {sign}\nshopToken: {shopToken}\nregPayNum: {regPayNum}\npayurl: {payurl}\nmethodType: {methodType}')
-    if user['sign'] and user['methodType'] == 'GET' and user['shopToken'] and 'https://demo-acq.bisys.ru/cardpay/card?order=' in user['payUrl'] and user['regPayNum']:
-        #print('OK')
+    if user['methodType'] == 'GET' and 'https://demo-acq.bisys.ru/cardpay/card?order=' in user['payUrl'] and user['regPayNum']:
         output.append('OK\n')
     else:
-        #print(f'Something wrong!\nrequest_status_code: {r.status_code}\nrequest: {request}')
         output.append(f'Something wrong!\nrequest_status_code: {r.status_code}\nrequest: {request}\n')
     # Открываем полученную ссылку, чтоб перехватить Cookies
     s.get(user['payUrl'], headers=headers)
@@ -105,7 +92,7 @@ def payment_created_pay():
     }
 
     url = config.acq_pay_url
-    r = s.post(url, data=payload, headers=headers)
+    r = s.post(url, data=payload, headers=headers, auth=auth)
     if r.status_code == 200:
         output.append('Response code == 200 OK\n')
     else:
@@ -117,29 +104,20 @@ def check_pay_status():
     #logger.info('Check payment state...')
     output.append('Check payment state...')
     payload = {
-        "sign": "AE13A1572E1A3594A0A956EB751D7F6D",
-        "regPayNum": f"{user['regPayNum']}",
-        "shopToken": f"{config.shopToken}"
+        "regPayNum": f"{user['regPayNum']}"
     }
     headers = {
         "Content-Type": "application/json"
     }
-    sign_str = payload['regPayNum'] + '&' + payload['shopToken'] + '&' + config.sec_key
-    pre_sign = (hashlib.md5(f"{sign_str}".encode('utf-8')).hexdigest()).upper()
-    sign = (hashlib.md5(f"{pre_sign}".encode('utf-8')).hexdigest()).upper()
-    payload['sign'] = sign
-
-    r = s.post(url, data=json.dumps(payload), headers=headers)
+    r = s.post(url, data=json.dumps(payload), headers=headers, auth=auth)
+    #logger.info(f'response: {r.text}')
     request = r.json()
     payment_state = request['state']
     if payment_state == 'payed':
-        #print('OK\n')
         output.append('OK\n')
     elif payment_state == 'created':
         output.append(f'Payment state: {payment_state}. Retry...\n')
-        #print(f'Payment state: {payment_state}. Retry...')
         time.sleep(10)
         check_pay_status()
     else:
         output.append(f'Something wrong! payment state: {payment_state}\n')
-        #print(f'Something wrong! payment state: {payment_state}')

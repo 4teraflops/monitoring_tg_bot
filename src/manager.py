@@ -7,7 +7,6 @@ from loguru import logger
 logger.add(f'log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
 
 
-
 def _system_command(command):
     try:
         command = subprocess.check_output(f'{command}; exit 0', shell=True)
