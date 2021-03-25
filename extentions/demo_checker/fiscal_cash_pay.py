@@ -1,7 +1,6 @@
 from .src import config
 from requests.auth import HTTPBasicAuth
 import json
-import random
 import requests
 import time
 from loguru import logger

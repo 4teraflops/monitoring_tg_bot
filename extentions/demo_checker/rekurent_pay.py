@@ -2,12 +2,9 @@ import requests
 from requests.exceptions import HTTPError
 from requests.auth import HTTPBasicAuth
 import json
-import os
-from src import config
+from .src import config
 import time
-import hashlib
 import random
-from datetime import datetime
 from loguru import logger
 
 logger.add(f'extentions/demo_checker/src/log/{__name__}.log', format='{time} {level} {message}', level='DEBUG', rotation='10 MB', compression='zip')
