@@ -114,3 +114,4 @@ def get_fiscal_check():
     except KeyError:
         logger.error('Unable to send response: KeyError in payload')
         output.append('Key error')
+

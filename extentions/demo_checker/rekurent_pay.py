@@ -263,3 +263,4 @@ def card_deactivation():
         output.append('OK\n')
     else:
         output.append(f'Something wrong! url: {url} response: {response}\n')
+
